@@ -7,9 +7,7 @@
  *
  */
 
-
-@border-color: #ccc;
-@sans-serif-fonts: Arial, sans-serif;
+@import "variables";
 
 .psp-text-field {
     position: relative;
@@ -254,6 +252,43 @@ perspective-viewer {
             .column_row();
             content: "mdy";
             color: #999999;
+        }
+    }
+
+    #side_panel #side_panel__actions {
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 1000;
+        justify-content: flex-end;
+        min-height: 10%;
+        margin-top: auto;
+        padding: 5px;
+        position: relative;
+        overflow-y: auto;
+        width: 100%;
+
+        button.side_panel-action {
+            align-items: center;
+            align-content: center;
+            background: none;
+            border: none;
+            display: flex;
+            flex-direction: row;
+            font-family: @sans-serif-fonts !important;
+            font-size: 12px;
+            padding-right: 10px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+
+            span {
+                margin-left: 5px;
+                font-size: 15px;
+            }
+
+            &:hover {
+                cursor: pointer;
+            }
         }
     }
 

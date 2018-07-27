@@ -20,6 +20,7 @@ import template from "../html/view.html";
 import "../less/view.less";
 
 import "./row.js";
+import "./computed_column.js";
 
 polyfill({});
 
@@ -439,7 +440,7 @@ function new_row(name, type, aggregate, filter, sort) {
     if (!type) {
         let all = Array.prototype.slice.call(this.querySelectorAll('#inactive_columns perspective-row'));
         if (all.length > 0) {
-            type = all.find(x => x.getAttribute('name') === name)
+            type = all.find(x => x.getAttribute('name') === name);
             if (type) {
                 type = type.getAttribute('type');
             } else {
@@ -494,9 +495,11 @@ function new_row(name, type, aggregate, filter, sort) {
         this._original_index = Array.prototype.slice.call(this._active_columns.children).findIndex(x => x.getAttribute('name') === name);
         if (this._original_index !== -1) {
             this._drop_target_hover = this._active_columns.children[this._original_index];
+            console.log(this._drop_target_hover);
             setTimeout(() => row.setAttribute('drop-target', true));
         } else {
             this._drop_target_hover = new_row.call(this, name, type, aggregate);
+            console.log(this._drop_target_hover);
         }
     });
     row.addEventListener('sort-order', sort_order_clicked.bind(this));
@@ -781,6 +784,21 @@ class ViewPrivate extends HTMLElement {
         }
     }
 
+    _open_computed_column() {
+        this._computed_column.style.display = 'flex';
+        this._side_panel_actions.style.display = 'none';
+    }
+
+    _set_computed_column_input(event) {
+        const computed_column_input = this._computed_column.querySelector('#psp-cc-computation__input-column');
+        console.log(event.detail);
+        computed_column_input.appendChild(new_row.call(
+            this,
+            event.detail.name
+        ));
+        this._update_column_view();
+    }
+
     _register_ids() {
         this._aggregate_selector = this.querySelector('#aggregate_selector');
         this._vis_selector = this.querySelector('#vis_selector');
@@ -792,6 +810,9 @@ class ViewPrivate extends HTMLElement {
         this._side_panel_divider = this.querySelector('#columns_container > #divider');
         this._active_columns = this.querySelector('#active_columns');
         this._inactive_columns = this.querySelector('#inactive_columns');
+        this._side_panel_actions = this.querySelector('#side_panel__actions');
+        this._add_computed_column = this.querySelector('#add-computed-column');
+        this._computed_column = this.querySelector('perspective-computed-column');
         this._inner_drop_target = this.querySelector('#drop_target_inner');
         this._drop_target = this.querySelector('#drop_target');
         this._config_button = this.querySelector('#config_button');
@@ -813,6 +834,9 @@ class ViewPrivate extends HTMLElement {
         this._active_columns.addEventListener('dragend', column_undrag.bind(this));
         this._active_columns.addEventListener('dragover', column_dragover.bind(this));
         this._active_columns.addEventListener('dragleave', column_dragleave.bind(this));
+        this._add_computed_column.addEventListener('mousedown', this._open_computed_column.bind(this));
+        this._computed_column.addEventListener('perspective-computed-column-save', (e) => console.log(e));
+        this._computed_column.addEventListener('perspective-computed-column-update', this._set_computed_column_input.bind(this));
         this._config_button.addEventListener('mousedown', this._toggle_config.bind(this));
         
         this._vis_selector.addEventListener('change', () => {
@@ -1134,7 +1158,7 @@ class View extends ViewPrivate {
     }
 
     /**
-     * This element's `perpsective.table.view` instance.  The instance itself
+     * This element's `perspective.table.view` instance.  The instance itself
      * will change after every `View#perspective-config-update` event. 
      *
      * @readonly
@@ -1343,7 +1367,6 @@ class View extends ViewPrivate {
         }
         f();
     }
-    
 }
 
 /**

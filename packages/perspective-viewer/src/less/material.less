@@ -7,14 +7,13 @@
  *
  */
 
- @import "./default.less";
+@import "variables";
+@import "default";
 
 @import url('https://fonts.googleapis.com/css?family=Open+Sans');
 @import url('https://fonts.googleapis.com/css?family=Material+Icons');
 @import url('https://fonts.googleapis.com/css?family=Roboto+Mono');
 
-@sans-serif-fonts: "Open Sans", Arial, sans-serif;
-@monospace-fonts: "Roboto Mono", monospace;
 
 input {
     padding: 6px 10px 6px 0;
@@ -77,12 +76,12 @@ perspective-viewer.dragging #app {
 
 perspective-row:before {
     font-size: 10px;
-    font-family: @sans-serif-fonts;
+    font-family: @material-sans-serif-fonts;
 }
 
 perspective-viewer {
 
-    font-family: @sans-serif-fonts;
+    font-family: @material-sans-serif-fonts;
 
     #config_button {
         margin-top: 14px;
@@ -169,7 +168,7 @@ perspective-viewer #app {
     perspective-row .float::before,
     perspective-row .integer::before,
     perspective-row .date::before {
-        font-family: @monospace-fonts;
+        font-family: @material-monospace-fonts;
         padding-left: 0;
     }
 
