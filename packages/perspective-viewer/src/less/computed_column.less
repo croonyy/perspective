@@ -20,10 +20,9 @@ perspective-computed-column {
   display: none;
   font-family: @sans-serif-fonts !important;
   flex-direction: column;
-  flex-shrink: 1000;
+  flex-shrink: 1;
   min-height: 25%;
   max-height: 35%;
-  margin-top: 5px;
   padding: 5px;
 
   &.edit {
@@ -36,6 +35,11 @@ perspective-computed-column {
     color: @darkgray;
     font-size: 10px;
     margin-left: 4px;
+
+    &.psp-cc__error {
+      color: #cb4549 !important;
+      width: 120px;
+    }
   }
 
  #psp-cc__actions {
@@ -83,52 +87,16 @@ perspective-computed-column {
       background: #fff;
       border-bottom: 1px solid #ccc;
       font-size: 12px;
+      margin-top: 5px;
       padding: 3px 4px;
     }
   }
 
-  #psp-cc-computation {
-    display: flex;
-    margin-top: 5px;
-  }
-
-  #psp-cc-computation__type {
-    &:before {
-      font-family: @monospace-fonts;
-      padding-right: 5px;
-      font-size: 12px;
-    }
-
-    &.date:before {
-      color: #999;
-      content: "mdy";
-    }
-
-    &.boolean:before {
-      color: #999;
-      content: "t/f";
-    }
-
-    &.float:before, &.integer:before {
-      color: #016bc6;
-      content: "123";
-    }
-
-    &.string:before {
-      color: #fe9292;
-      content: "abc";
-    }
-  }
-
-  #psp-cc-computation__select {
-    margin-left: auto;
-    width: 100%;
-  }
-
   #psp-cc-computation__input-column {
     background: none;
-    //border: 1px solid #ccc;
-    height: 41px;
+    border-bottom: 1px solid #ccc;
+    margin-top: 5px;
+    height: 21px;
     width: 100%;
 
     &.dropping {
@@ -151,16 +119,44 @@ perspective-computed-column {
       border-left-width: 0px;
       border-right-width: 0px;
       background-color: white;
-      height: 41px;
+      margin-right: 0;
     }
+  }
+
+  #psp-cc-computation {
+    align-items: center;
+    display: flex;
+    margin-top: 5px;
+  }
+
+  #psp-cc-computation__type {
+    display: flex;
+    font-family: @monospace-fonts;
+    flex-direction: column;
+    font-size: 12px;
+    padding-right: 5px;
+    text-align: center;
+
+    .date, .boolean {
+      color: #999;
+    }
+
+    .float, .integer {
+      color: #016bc6;
+    }
+
+    .string {
+      color: #fe9292;
+    }
+  }
+
+  #psp-cc-computation__select {
+    margin-left: auto;
+    width: 100%;
   }
 
   #psp-cc-computation__drop-target-hover {
     display: none;
-  }
-
-  #psp-cc__actions {
-    margin-top: auto;
   }
 
   .psp-cc__button {
@@ -175,8 +171,12 @@ perspective-computed-column {
     width: 55px;
 
     &:hover {
-      color: @darkgray;
       cursor: pointer;
+    }
+
+    &[disabled] {
+      background: @darkgray;
+      color: #fff;
     }
 
     &#psp-cc-button-delete {
@@ -184,10 +184,11 @@ perspective-computed-column {
       border-bottom-color: #bf4d45;
       color: #fff;
       display: none;
-      /*&:hover {
+
+      &:active {
         background: #bf4d45;
         border-bottom-color: #9d3f39;
-      }*/
+      }
     }
 
     &#psp-cc-button-save {
@@ -195,10 +196,10 @@ perspective-computed-column {
       border-bottom-color: #0160b1;
       color: #fff;
 
-      /*&:hover {
+      &:active {
         background: #0160b1;
         border-bottom-color: #014986;
-      }*/
+      }
     }
   }
 }

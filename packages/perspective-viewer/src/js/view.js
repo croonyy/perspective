@@ -231,6 +231,14 @@ function column_visibility_clicked(ev) {
             this._active_columns.removeChild(parent);
         }
     } else {
+        // check if we're manipulating computed column input
+        if(ev.path[1].id === 'psp-cc-computation__input-column') {
+            this._computed_column_input_column.innerHTML = '';
+            this._computed_column_input_column.classList.remove('dropped');
+            this._computed_column.setAttribute('input_column', '');
+            this._update_column_view();
+            return;
+        }
         if (ev.detail.shiftKey && this._plugin.selectMode === 'toggle' || !ev.detail.shiftKey && this._plugin.selectMode === 'select') {
             for (let child of Array.prototype.slice.call(this._active_columns.children)) {
                 this._active_columns.removeChild(child);
@@ -495,11 +503,9 @@ function new_row(name, type, aggregate, filter, sort) {
         this._original_index = Array.prototype.slice.call(this._active_columns.children).findIndex(x => x.getAttribute('name') === name);
         if (this._original_index !== -1) {
             this._drop_target_hover = this._active_columns.children[this._original_index];
-            console.log(this._drop_target_hover);
             setTimeout(() => row.setAttribute('drop-target', true));
         } else {
             this._drop_target_hover = new_row.call(this, name, type, aggregate);
-            console.log(this._drop_target_hover);
         }
     });
     row.addEventListener('sort-order', sort_order_clicked.bind(this));
@@ -790,13 +796,38 @@ class ViewPrivate extends HTMLElement {
     }
 
     _set_computed_column_input(event) {
-        const computed_column_input = this._computed_column.querySelector('#psp-cc-computation__input-column');
-        console.log(event.detail);
-        computed_column_input.appendChild(new_row.call(
+        this._computed_column_input_column.appendChild(new_row.call(
             this,
-            event.detail.name
+            event.detail.name,
+            event.detail.type
         ));
         this._update_column_view();
+    }
+
+    _create_computed_column(event) {
+        const data = event.detail;
+        let computed_column_name = data.column_name;
+
+        this._table.columns().then((cols) => {
+            // do not duplicate computed columns
+            if(cols.includes(computed_column_name)) {
+                computed_column_name += (Math.round(Math.random() * 100));
+            }
+            const params = [{
+                column: computed_column_name,
+                func: data.computation.func,
+                inputs: [data.input_column],
+                type: data.computation.return_type
+            }];
+
+            const table = this._table.add_computed(params);
+            loadTable.call(this, table);
+            this._update_column_view();
+            this.dispatchEvent(new Event('perspective-view-update'));
+
+            this._computed_column.style.display = 'none';
+            this._side_panel_actions.style.display = 'flex';
+        });
     }
 
     _register_ids() {
@@ -813,6 +844,7 @@ class ViewPrivate extends HTMLElement {
         this._side_panel_actions = this.querySelector('#side_panel__actions');
         this._add_computed_column = this.querySelector('#add-computed-column');
         this._computed_column = this.querySelector('perspective-computed-column');
+        this._computed_column_input_column = this._computed_column.querySelector('#psp-cc-computation__input-column');
         this._inner_drop_target = this.querySelector('#drop_target_inner');
         this._drop_target = this.querySelector('#drop_target');
         this._config_button = this.querySelector('#config_button');
@@ -835,7 +867,7 @@ class ViewPrivate extends HTMLElement {
         this._active_columns.addEventListener('dragover', column_dragover.bind(this));
         this._active_columns.addEventListener('dragleave', column_dragleave.bind(this));
         this._add_computed_column.addEventListener('mousedown', this._open_computed_column.bind(this));
-        this._computed_column.addEventListener('perspective-computed-column-save', (e) => console.log(e));
+        this._computed_column.addEventListener('perspective-computed-column-save', this._create_computed_column.bind(this));
         this._computed_column.addEventListener('perspective-computed-column-update', this._set_computed_column_input.bind(this));
         this._config_button.addEventListener('mousedown', this._toggle_config.bind(this));
         

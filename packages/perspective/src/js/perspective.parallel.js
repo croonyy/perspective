@@ -140,7 +140,7 @@ table.prototype.add_computed = function(computed) {
             column['func'] = func.toString();
         }
     }
-    var msg = {
+    let msg = {
         cmd: 'add_computed',
         original: original,
         name: name,
