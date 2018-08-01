@@ -9,9 +9,9 @@
     "superstore.html/sorts by an alpha column.": "6dad0e24af38d84f401afd8568701ccb",
     "superstore.html/displays visible columns.": "a7e10d17388e4dfd1599331ab6b76d53",
     "superstore.html/sorts by a hidden column.": "14e9a80ef0bc2612c48cc9399c87a119",
-    "superstore.html/click on add computed column button opens the UI.": "84be0808b8e6045996af4251bd5c39c5",
+    "superstore.html/click on add computed column button opens the UI.": "bfe90d64109f1990b60fa6422e9ce109",
     "superstore.html/click on close button closes the UI.": "b8a159e55364a3f91cda9fdf7fddf11a",
-    "superstore.html/saving without parameters should show an error message.": "89a9f70ce2d03f84d5a1eb21a55b0586",
-    "superstore.html/shows horizontal columns on small viewports.": "64f400a8d9ec3c345bb61d097c3c1c55",
+    "superstore.html/saving without parameters should show an error message.": "37bfd97ebd449e26ec4e931f50d78a7e",
+    "superstore.html/shows horizontal columns on small viewports.": "d3b6a37af9f22a023f49f0abe073d808",
     "blank.html/Handles reloading with a schema.": "9a62c950ef20efa452d4849fa4d6ae14"
 }
